@@ -24,7 +24,7 @@
 #' new_datetime(0, tzone = "UTC")
 #' new_duration(1, "hour")
 new_date <- function(x = double()) {
-  stopifnot(is.double(x))
+  stopifnot(is.numeric(x))
 
   structure(
     x,
@@ -37,7 +37,7 @@ new_date <- function(x = double()) {
 new_datetime <- function(x = double(), tzone = "") {
   tzone <- tzone %||% ""
 
-  stopifnot(is.double(x))
+  stopifnot(is.numeric(x))
   stopifnot(is.character(tzone))
 
   structure(
