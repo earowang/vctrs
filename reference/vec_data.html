@@ -8,21 +8,36 @@
 
 <title>Extract underlying data — vec_data • vctrs</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
+
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -30,24 +45,13 @@
 
 
 
+
 <meta property="og:title" content="Extract underlying data — vec_data" />
-
-<meta property="og:description" content="Extract the data underlying an S3 vector object, i.e. the underlying
-(named) atomic vector or list.
-vec_data() returns unstructured data. The only attributes
-preserved are names, dims, and dimnames.
-Currently, due to the underlying memory architecture of R, this
-creates a full copy of the data.
-vec_proxy() may return structured data. This generic is the
-main customisation point in vctrs, along with vec_restore().
-See the section below to learn when you should implement
-vec_proxy().
-Methods must return a vector type. Records and data frames will
-be processed rowwise.
-" />
-
+<meta property="og:description" content="
+Extract the data underlying an S3 vector object, i.e. the underlying
+(named) atomic vector or list." />
 <meta property="og:image" content="https://vctrs.r-lib.org/logo.png" />
-<meta name="twitter:card" content="summary" />
+
 
 
 
@@ -61,9 +65,20 @@ be processed rowwise.
 <![endif]-->
 
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-115082821-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-115082821-1');
+</script>
+
+
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -77,7 +92,7 @@ be processed rowwise.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">vctrs</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0.9003</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.99.9011</span>
       </span>
     </div>
 
@@ -85,7 +100,7 @@ be processed rowwise.
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -99,6 +114,9 @@ be processed rowwise.
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/pillar.html">Printing vectors nicely in tibbles</a>
+    </li>
     <li>
       <a href="../articles/s3-vector.html">S3 vectors</a>
     </li>
@@ -114,11 +132,10 @@ be processed rowwise.
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/r-lib/vctrs">
-    <span class="fa fa-github fa-lg"></span>
+  <a href="https://github.com/r-lib/vctrs/">
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -129,117 +146,79 @@ be processed rowwise.
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Extract underlying data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/r-lib/vctrs/blob/master/R/data.R'><code>R/data.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/r-lib/vctrs/blob/master/R/proxy.R'><code>R/proxy.R</code></a></small>
     <div class="hidden name"><code>vec_data.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    
-    <p>Extract the data underlying an S3 vector object, i.e. the underlying
-(named) atomic vector or list.</p><ul>
-<li><p><code>vec_data()</code> returns unstructured data. The only attributes
-preserved are names, dims, and dimnames.</p>
-<p>Currently, due to the underlying memory architecture of R, this
-creates a full copy of the data.</p></li>
-<li><p><code>vec_proxy()</code> may return structured data. This generic is the
-main customisation point in vctrs, along with <code><a href='vec_cast.html'>vec_restore()</a></code>.
-See the section below to learn when you should implement
-<code>vec_proxy()</code>.</p>
-<p>Methods must return a vector type. Records and data frames will
-be processed rowwise.</p></li>
-</ul>
-    
+    <p><a href='https://www.tidyverse.org/lifecycle/#experimental'><img src='figures/lifecycle-experimental.svg' alt='Experimental lifecycle'></a></p>
+<p>Extract the data underlying an S3 vector object, i.e. the underlying
+(named) atomic vector or list.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>vec_data</span>(<span class='no'>x</span>)
+    <pre class="usage"><span class='fu'>vec_data</span>(<span class='no'>x</span>)</pre>
 
-<span class='fu'>vec_proxy</span>(<span class='no'>x</span>)</pre>
-    
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>A vector or object implementing <code>vec_proxy()</code>.</p></td>
+      <td><p>A vector or object implementing <code><a href='vec_proxy.html'>vec_proxy()</a></code>.</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>The data underlying <code>x</code>, free from any attributes except the names.</p>
-    
-    <h2 class="hasAnchor" id="when-should-you-proxy-your-type"><a class="anchor" href="#when-should-you-proxy-your-type"></a>When should you proxy your type</h2>
+    <h2 class="hasAnchor" id="difference-with-vec-proxy-"><a class="anchor" href="#difference-with-vec-proxy-"></a>Difference with <code><a href='vec_proxy.html'>vec_proxy()</a></code></h2>
 
     
-    <p>You should only implement <code>vec_proxy()</code> when your type is designed
-around a non-vector class. I.e. anything that is not either:</p><ul>
-<li><p>An atomic vector</p></li>
-<li><p>A bare list</p></li>
-<li><p>A data frame</p></li>
+
+<ul>
+<li><p><code>vec_data()</code> returns unstructured data. The only attributes
+preserved are names, dims, and dimnames.</p>
+<p>Currently, due to the underlying memory architecture of R, this
+creates a full copy of the data.</p></li>
+<li><p><code><a href='vec_proxy.html'>vec_proxy()</a></code> may return structured data. This generic is the
+main customisation point for accessing memory values in vctrs,
+along with <code><a href='vec_proxy.html'>vec_restore()</a></code>.</p>
+<p>Methods must return a vector type. Records and data frames will
+be processed rowwise.</p></li>
 </ul>
-    <p>In this case, implement <code>vec_proxy()</code> to return such a vector
-class. The vctrs operations such as <code><a href='vec_slice.html'>vec_slice()</a></code> are applied on
-the proxy and <code><a href='vec_cast.html'>vec_restore()</a></code> is called to restore the original
-representation of your type.</p>
-<p>The most common case where you need to implement <code>vec_proxy()</code> is
-for S3 lists. In vctrs, S3 lists are treated as scalars by
-default. This way we don't treat objects like model fits as
-vectors. To prevent vctrs from treating your S3 list as a scalar,
-unclass it in the <code>vec_proxy()</code> method. For instance, here is the
-definition for <code>list_of</code>:</p><pre>vec_proxy.vctrs_list_of &lt;- function(x) {
-  unclass(x)
-}
-</pre>
-    <p>Another case where you need to implement a proxy is <a href='new_rcrd.html'>record types</a>. Record types should return a data frame, as in
-the <code>POSIXlt</code> method:</p><pre>vec_proxy.POSIXlt &lt;- function(x) {
-  new_data_frame(unclass(x))
-}
-</pre>
-    <p>Note that you don't need to implement <code>vec_proxy()</code> when your class
-inherits from <code>vctrs_vctr</code> or <code>vctrs_rcrd</code>.</p>
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>See <code><a href='vec_cast.html'>vec_restore()</a></code> for the inverse operation: it restores
-attributes given a bare vector and a prototype;
-<code><a href='vec_cast.html'>vec_restore(vec_data(x), x)</a></code> will always yield <code>x</code>.</p></div>
-    
 
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-
-      <li><a href="#when-should-you-proxy-your-type">When should you proxy your type</a></li>
-
-      <li><a href="#see-also">See also</a></li>
-          </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
-  <p>Developed by <a href='http://hadley.nz'>Hadley Wickham</a>.</p>
+  <p>Developed by <a href='http://hadley.nz'>Hadley Wickham</a>, Lionel Henry, Davis Vaughan.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 
